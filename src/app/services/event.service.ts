@@ -12,6 +12,8 @@ export class EventService {
   public endedEvent$: Subject<AudioEvent>;
   public scheduledEvents$: BehaviorSubject<AudioEvent[]>;
   public scheduleEvent$: Subject<AudioEvent>;
+  public meterEvent$: Subject<AudioEvent>;
+  public tick$: Subject<AudioEvent>;
 
 
   constructor() {
@@ -19,17 +21,19 @@ export class EventService {
     this.endedEvent$ = new Subject();
     this.scheduledEvents$ = new BehaviorSubject([]);
     this.scheduleEvent$ = new Subject();
+    this.meterEvent$ = new Subject();
+    this.tick$ = new Subject();
   }
 
-  public fromDispatchedEvent(event) {
+  public fromDispatchedEvent(type) {
     return this.dispatchEvent$.pipe(
-      filter(message => message.type === event.type),
+      filter(message => message.type === type),
     );
   }
 
-  public fromEndedEvent(event) {
+  public fromEndedEvent(type) {
     return this.endedEvent$.pipe(
-      filter(message => message.type === event.type),
+      filter(message => message.type === type),
     );
   }
 

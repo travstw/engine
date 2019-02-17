@@ -10,12 +10,10 @@ import { EventService } from './event.service';
   providedIn: 'root'
 })
 export class ConductorService {
-  private dispatchedEvent$: Subject<AudioEvent>;
 
   constructor(
     private events: EventService,
     private scheduler: SchedulerService,
-    private meter: MeterService,
   ) {
 
     this.events.dispatchEvent$.subscribe(
@@ -26,11 +24,9 @@ export class ConductorService {
       (event) => this.addScheduledEvent(event)
     );
 
-    // this.meter.tempoChange$.subscribe(
-    //   (tempo) => {
-    //     this.rescheduleEvents(tempo);
-    //   }
-    // )
+    this.events.meterEvent$.subscribe(
+      (event) => this.rescheduleEvents(event)
+    );
   }
 
   private addScheduledEvent(event) {
@@ -46,7 +42,7 @@ export class ConductorService {
     event.dispatch();
   }
 
-  private rescheduleEvents(tempo) {
+  private rescheduleEvents(meter) {
     const events: AudioEvent[] = this.events.scheduledEvents$.getValue();
     const rescheduledEvents: AudioEvent[] = events.map(event => {
       // TODO recalculate eventTimes here...
